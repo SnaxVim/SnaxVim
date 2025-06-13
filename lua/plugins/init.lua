@@ -31,7 +31,7 @@ return {
   },
   { -- Configs for LSP
     "neovim/nvim-lspconfig",
-    event = "BufAdd",
+    event = { "BufAdd", "BufNewFile", "BufReadPre" },
     config = require("configs.nvim-lspconfig"),
   },
   { -- DAP client
