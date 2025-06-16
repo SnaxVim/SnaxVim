@@ -13,7 +13,9 @@ function M.config()
 
   require("mason").setup(options)
 
-  M.pkg_install()
+  if vim.v.vim_did_enter == 1 then
+    M.pkg_install()
+  end
 end
 
 function M.pkg_install()
