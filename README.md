@@ -83,13 +83,14 @@ nvim
 ```
 ~/.config/nvim/
 ├─ lua/
-│  ├─ autocmds/      -- auto commands
-│  ├─ configs/       -- plugin-specific configuration files
-│  ├─ keymaps/       -- key mappings
-│  ├─ plugins/       -- plugin declarations
-│  ├─ foldcolumn.lua -- foldcolumn without digits (temporary workaround)
-│  └─ options.lua    -- global variables and editor options
-└─ init.lua          -- entry point
+│  ├─ autocmds/       -- auto commands
+│  ├─ configs/        -- plugin-specific configuration files
+│  ├─ keymaps/        -- key mappings
+│  ├─ plugins/        -- plugin declarations
+│  ├─ foldcolumn.lua  -- foldcolumn without digits (temporary workaround)
+│  ├─ options.lua     -- global variables and editor options
+│  └─ options_pre.lua -- settings evaluated before lazy.nvim
+└─ init.lua           -- entry point
 ```
 
 ## Credits
