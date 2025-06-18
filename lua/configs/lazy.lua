@@ -26,6 +26,7 @@ local options = {
         "zip",
         "zipPlugin",
         "tutor",
+        "rplugin",
         "syntax",
         "synmenu",
         "optwin",
