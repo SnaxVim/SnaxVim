@@ -1,6 +1,15 @@
+local env = vim.env
+local sep = vim.uv.os_uname().sysname == "Windows_NT" and ";" or ":"
 local o = vim.o
 local opt = vim.opt
 
+-- environment variables defined in the editor session
+env.PATH = table.concat({
+  env.PATH,
+  vim.fn.stdpath("data") .. "/mason/bin",
+}, sep)
+
+-- editor options
 o.confirm = true
 o.expandtab = true
 o.shiftwidth = 0

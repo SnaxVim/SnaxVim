@@ -1,24 +1,4 @@
-M = {}
-
-function M.init()
-  local env = vim.env
-  local delimiter = vim.uv.os_uname().sysname == "Windows_NT" and ";" or ":"
-  env.PATH = env.PATH .. delimiter .. vim.fn.stdpath("data") .. "/mason/bin"
-end
-
-function M.config()
-  local options = {
-    ui = { icons = { package_pending = "󰦗", package_installed = "󰄳", package_uninstalled = "󰄰" } },
-  }
-
-  require("mason").setup(options)
-
-  if vim.v.vim_did_enter == 1 then
-    M.pkg_install()
-  end
-end
-
-function M.pkg_install()
+local function pkg_install()
   local iter = vim.iter
   local tbl_keys = vim.tbl_keys
   local registry = require("mason-registry")
@@ -81,4 +61,16 @@ function M.pkg_install()
   end)
 end
 
-return M
+local function config()
+  local options = {
+    ui = { icons = { package_pending = "󰦗", package_installed = "󰄳", package_uninstalled = "󰄰" } },
+  }
+
+  require("mason").setup(options)
+
+  if vim.v.vim_did_enter == 1 then
+    pkg_install()
+  end
+end
+
+return config
