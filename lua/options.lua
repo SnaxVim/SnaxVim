@@ -1,5 +1,4 @@
 local env = vim.env
-local sep = vim.uv.os_uname().sysname == "Windows_NT" and ";" or ":"
 local o = vim.o
 local opt = vim.opt
 local diagnostic = vim.diagnostic
@@ -9,7 +8,7 @@ local sev = diagnostic.severity
 env.PATH = table.concat({
   env.PATH,
   vim.fn.stdpath("data") .. "/mason/bin",
-}, sep)
+}, vim.uv.os_uname().sysname == "Windows_NT" and ";" or ":")
 
 -- editor options
 o.confirm = true
