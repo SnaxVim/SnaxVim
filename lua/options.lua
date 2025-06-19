@@ -2,6 +2,8 @@ local env = vim.env
 local sep = vim.uv.os_uname().sysname == "Windows_NT" and ";" or ":"
 local o = vim.o
 local opt = vim.opt
+local diagnostic = vim.diagnostic
+local sev = diagnostic.severity
 
 -- environment variables defined in the editor session
 env.PATH = table.concat({
@@ -26,3 +28,10 @@ o.splitright = true
 o.undofile = true
 o.whichwrap = "b,s,<,>,[,]"
 o.wrap = false
+
+-- diagnostic options
+diagnostic.config({
+  float = { border = "rounded" },
+  signs = { text = { [sev.ERROR] = "󰅚", [sev.WARN] = "󰀪", [sev.INFO] = "󰋽", [sev.HINT] = "󰌶" } },
+  virtual_text = true,
+})
