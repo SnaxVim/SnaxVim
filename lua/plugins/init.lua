@@ -26,8 +26,7 @@ return {
     "mason-org/mason.nvim",
     build = ":MasonUpdate",
     cmd = "Mason",
-    init = require("configs.mason").init,
-    config = require("configs.mason").config,
+    config = require("configs.mason"),
   },
   { -- Configs for LSP
     "neovim/nvim-lspconfig",
