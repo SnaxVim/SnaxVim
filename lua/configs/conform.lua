@@ -23,7 +23,6 @@ local options = {
     -- },
   },
 
-  -- Comment out the following function to completely disable format on save
   format_on_save = function()
     return vim.v.cmdbang ~= 1 and {} -- Skip formatting when saving with a bang (e.g. `:w!`, `:up!`)
   end,
