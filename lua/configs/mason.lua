@@ -16,10 +16,10 @@ local function install_pkgs(packages)
 end
 
 ---@class PkgLists
----@field lsps string[]?
+---@field lsps string[]
 ---@field daps string[]
----@field linters string[]?
----@field formatters string[]?
+---@field linters string[]
+---@field formatters string[]
 
 --- Merge package name lists and remove duplicates
 ---@param pkgs PkgLists
@@ -37,37 +37,45 @@ end
 ---@return PkgLists
 local function extract_pkgname_lists()
   local iter = vim.iter
-  local lspconfig_exists, _ = pcall(require, "lspconfig")
-  local lint_exists, lint = pcall(require, "lint")
-  local conform_exists, conform = pcall(require, "conform")
-  local registry = require("mason-registry")
-  local mason_names = iter(registry.get_all_package_specs())
-    :filter(function(pkg_spec)
-      return vim.tbl_get(pkg_spec, "neovim", "lspconfig") ~= nil
-    end)
-    :fold({}, function(acc, pkg_spec)
-      acc[pkg_spec.neovim.lspconfig] = pkg_spec.name
-      return acc
-    end)
+  local ok_lspconfig, _ = pcall(require, "lspconfig")
+  local ok_dapcfg, dapcfg = pcall(require, "configs.nvim-dap")
+  local ok_lint, lint = pcall(require, "lint")
+  local ok_conform, conform = pcall(require, "conform")
+  local ok_registry, registry = pcall(require, "mason-registry")
+  local mason_names = (ok_registry and type(registry.get_all_package_specs) == "function")
+      and iter(registry.get_all_package_specs() or {})
+        :filter(function(pkg_spec)
+          return vim.tbl_get(pkg_spec, "neovim", "lspconfig") ~= nil
+        end)
+        :fold({}, function(acc, pkg_spec)
+          acc[pkg_spec.neovim.lspconfig] = pkg_spec.name or pkg_spec.neovim.lspconfig
+          return acc
+        end)
+    or {}
 
   return {
-    lsps = lspconfig_exists and iter(vim.tbl_keys(vim.lsp._enabled_configs))
+    lsps = ok_lspconfig and iter(vim.tbl_keys(vim.lsp._enabled_configs))
       :map(function(lspcfg_name)
         return mason_names[lspcfg_name] or lspcfg_name
       end)
-      :totable() or nil,
-    daps = require("configs.nvim-dap").adapters,
-    linters = lint_exists and iter(vim.tbl_values(lint.linters_by_ft))
+      :totable() or {},
+    daps = ok_dapcfg and dapcfg.adapters or {},
+    linters = ok_lint and iter(vim.tbl_values(lint.linters_by_ft))
       :flatten()
+      :filter(function(lnt)
+        return vim.tbl_get(lint, "linters", lnt) ~= nil
+      end)
       :map(function(lnt)
         return lint.linters[lnt].cmd
       end)
-      :totable() or nil,
-    formatters = conform_exists and iter(conform.list_all_formatters())
-      :map(function(fmt)
-        return fmt.command
-      end)
-      :totable() or nil,
+      :totable() or {},
+    formatters = (ok_conform and type(conform.list_all_formatters) == "function")
+        and iter(conform.list_all_formatters() or {})
+          :map(function(fmt)
+            return fmt.command
+          end)
+          :totable()
+      or {},
   }
 end
 
