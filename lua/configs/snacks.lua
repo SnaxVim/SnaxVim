@@ -40,6 +40,11 @@ local options = {
       header = header,
     },
   },
+  statuscolumn = {
+    folds = {
+      open = true,
+    },
+  },
 }
 
 return options
