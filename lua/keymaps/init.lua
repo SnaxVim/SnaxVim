@@ -1,9 +1,8 @@
 local map = vim.keymap.set
 
 -- clipboard
-map("x", "<C-Insert>", '"+y', { desc = "Copy to Clipboard" })
-map("x", "<S-Delete>", '"+x', { desc = "Cut to Clipboard" })
-map({ "n", "x" }, "<S-Insert>", '"+p', { desc = "Paste from Clipboard" })
+map({ "n", "x" }, "-", '"-', { desc = "Use Brackhole Register" })
+map({ "n", "x" }, "+", '"+', { desc = "Use Clipboard Register" })
 map({ "i", "c" }, "<S-Insert>", "<C-r>+", { desc = "Paste from Clipboard" })
 map({ "i", "c" }, "<A-p>", '<C-r>"', { desc = "Paste from Buffer" })
 
