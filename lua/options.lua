@@ -15,7 +15,6 @@ o.confirm = true
 o.expandtab = true
 o.shiftwidth = 0
 o.tabstop = 2
-o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 o.ignorecase = true
 o.smartcase = true
 opt.listchars = { tab = " ‥", trail = "-", nbsp = "␣", eol = "↲", space = "·", extends = "»", precedes = "«" }
