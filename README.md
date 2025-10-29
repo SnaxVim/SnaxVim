@@ -11,6 +11,9 @@
 
 SnaxVim is a no-frills starter template for building your own Neovim configuration.
 
+> [!CAUTION]
+> Support for the [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) `master` branch will be discontinued due to its freezing.
+
 ## Features
 
 - **Minimal yet Capable**
