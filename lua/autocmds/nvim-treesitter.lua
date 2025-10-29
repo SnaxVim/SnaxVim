@@ -1,6 +1,6 @@
 local api = vim.api
 api.nvim_create_autocmd("FileType", {
-  group = api.nvim_create_augroup("ts-start", {}),
+  group = api.nvim_create_augroup("ts-start", { clear = true }),
   callback = function(args)
     local treesitter = vim.treesitter
     local contains = vim.list_contains
