@@ -8,11 +8,11 @@ return {
 
   { -- Parser
     "nvim-treesitter/nvim-treesitter",
-    branch = "master",
+    branch = "main",
     build = ":TSUpdate",
     event = { "BufNewFile", "BufReadPost" },
-    main = "nvim-treesitter.configs",
-    opts = require("configs.nvim-treesitter"),
+    opts = {},
+    config = require("configs.nvim-treesitter"),
   },
 
   { -- Completion
