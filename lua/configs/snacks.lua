@@ -43,7 +43,9 @@ local options = {
   statuscolumn = {
     folds = {
       open = true,
+      git_hl = true,
     },
+    refresh = 1,
   },
 }
 
