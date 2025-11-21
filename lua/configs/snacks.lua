@@ -47,6 +47,13 @@ local options = {
     },
     refresh = 1,
   },
+  styles = {
+    terminal = {
+      keys = {
+        term_normal = false,
+      },
+    },
+  },
 }
 
 return options

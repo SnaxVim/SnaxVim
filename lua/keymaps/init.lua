@@ -18,10 +18,10 @@ map("n", "<A-a>", "ggVG", { desc = "Select All" })
 map("x", "<C-h>", 'y:%s/<C-r>"/', { desc = "Replace Selection" })
 
 -- window
-map("n", "<C-h>", "<C-w>h", { desc = "Window Switch to Left" })
-map("n", "<C-l>", "<C-w>l", { desc = "Window Switch to Right" })
-map("n", "<C-j>", "<C-w>j", { desc = "Window Switch to Down" })
-map("n", "<C-k>", "<C-w>k", { desc = "Window Switch to Up" })
+map("n", "<C-h>", "<C-w>h", { desc = "Window Switch Left" })
+map("n", "<C-l>", "<C-w>l", { desc = "Window Switch Right" })
+map("n", "<C-j>", "<C-w>j", { desc = "Window Switch Down" })
+map("n", "<C-k>", "<C-w>k", { desc = "Window Switch Up" })
 map("n", "<A-Up>", "<C-w>+", { desc = "Window Increase Height" })
 map("n", "<A-Down>", "<C-w>-", { desc = "Window Decrease Height" })
 map("n", "<A-Right>", "<C-w>>", { desc = "Window Increase Width" })
@@ -39,7 +39,8 @@ map({ "n", "x", "i" }, "<C-s>", function()
 end, { desc = "Buffer Save" })
 
 -- option
-map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit Terminal Mode" })
+map("t", "<Esc>", "<C-\\><C-n><Plug>(TermEsc)", { desc = "Terminal Switch to Normal Mode" })
+map("n", "<Plug>(TermEsc)<Esc>", "i<Esc>", { desc = "Terminal Send Esc" })
 map("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Highlight Clear" })
 map("n", "<leader>wt", function()
   if vim.o.wrap then
