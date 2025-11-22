@@ -30,9 +30,10 @@ map("n", "<A-Left>", "<C-w><", { desc = "Window Decrease Width" })
 -- buffer operation
 map("n", "<C-n>", "<cmd>enew<CR>", { desc = "Buffer New" })
 map({ "n", "x", "i" }, "<C-s>", function()
-  if vim.api.nvim_buf_get_name(0) == "" then
-    local keys = vim.api.nvim_replace_termcodes("<Esc>:w ", true, false, true)
-    vim.api.nvim_feedkeys(keys, "n", false)
+  local api = vim.api
+  if api.nvim_buf_get_name(0) == "" then
+    local keys = api.nvim_replace_termcodes("<Esc>:w ", true, false, true)
+    api.nvim_feedkeys(keys, "n", false)
   else
     vim.cmd.update()
   end
@@ -43,23 +44,15 @@ map("t", "<Esc>", "<C-\\><C-n><Plug>(TermEsc)", { desc = "Terminal Switch to Nor
 map("n", "<Plug>(TermEsc)<Esc>", "i<Esc>", { desc = "Terminal Send Esc" })
 map("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Highlight Clear" })
 map("n", "<leader>wt", function()
-  if vim.o.wrap then
-    vim.o.wrap = false
+  local wo = vim.wo
+  if wo.wrap then
+    wo.wrap = false
     vim.notify("wrap: off")
   else
-    vim.o.wrap = true
+    wo.wrap = true
     vim.notify("wrap: on")
   end
 end, { desc = "Wrap Toggle" })
-map("n", "<leader>ci", function()
-  if vim.lsp.inlay_hint.is_enabled() then
-    vim.lsp.inlay_hint.enable(false)
-    vim.notify("inlay hint: off")
-  else
-    vim.lsp.inlay_hint.enable(true)
-    vim.notify("inlay hint: on")
-  end
-end, { desc = "LSP Toggle Inlay Hint" })
 
 -- LSP
 map("n", "gd", vim.lsp.buf.definition, { desc = "LSP Definition" })
@@ -72,6 +65,16 @@ end, { desc = "LSP Show Workspace Folder List" })
 map("n", "<leader>D", vim.lsp.buf.type_definition, { desc = "LSP Type Definition" })
 map("n", "<leader>rn", vim.lsp.buf.rename, { desc = "LSP Rename" })
 map("n", "<leader>qf", vim.diagnostic.setloclist, { desc = "LSP Open Diagnostic Quickfix list" })
+map("n", "<leader>ci", function()
+  local inlay_hint = vim.lsp.inlay_hint
+  if inlay_hint.is_enabled() then
+    inlay_hint.enable(false)
+    vim.notify("inlay hint: off")
+  else
+    inlay_hint.enable(true)
+    vim.notify("inlay hint: on")
+  end
+end, { desc = "LSP Toggle Inlay Hint" })
 
 -- plugins
 require("keymaps.conform")
