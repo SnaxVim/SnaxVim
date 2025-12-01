@@ -2,7 +2,6 @@ local iter = vim.iter
 local log = vim.log
 local lsp = vim.lsp
 local v = vim.v
-local notify = vim.notify
 local tbl_get = vim.tbl_get
 local tbl_keys = vim.tbl_keys
 local tbl_values = vim.tbl_values
@@ -93,13 +92,13 @@ local function config()
 
   require("mason").setup(options)
 
-  if v.vim_did_enter == 1 then -- prevent errors on first neovim startup
+  if v.vim_did_enter == 1 then -- Prevent errors on first neovim startup
     local registry = require("mason-registry")
     local get_package = registry.get_package
     if type(get_package) == "function" then
       local ok_get_all_pkg_specs, all_pkg_specs = pcall(registry.get_all_package_specs)
       if not ok_get_all_pkg_specs then
-        notify("Failed to load package metadata from mason-registry.", log.levels.WARN, { title = "mason.nvim" })
+        vim.notify("Failed to load package metadata from mason-registry.", log.levels.WARN, { title = "mason.nvim" })
       end
       local mason_mapping_table = ok_get_all_pkg_specs and create_mason_mapping_table(all_pkg_specs) or {}
 
