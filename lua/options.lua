@@ -4,8 +4,21 @@ local opt = vim.opt
 local diagnostic = vim.diagnostic
 local sev = diagnostic.severity
 
+--- Join non-nil values
+---@param tbl (string|nil)[]
+---@param sep string
+---@return string
+local function compact_join(tbl, sep)
+  local iter = vim.iter
+  return iter(tbl)
+    :filter(function(v)
+      return v ~= nil
+    end)
+    :join(sep)
+end
+
 -- environment variables defined in the editor session
-env.PATH = table.concat({
+env.PATH = compact_join({
   env.PATH,
   vim.fn.stdpath("data") .. "/mason/bin",
 }, vim.uv.os_uname().sysname == "Windows_NT" and ";" or ":")
