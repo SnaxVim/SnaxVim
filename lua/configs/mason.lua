@@ -8,9 +8,13 @@ local tbl_values = vim.tbl_values
 
 --- Install packages that are not yet installed via mason.nvim
 ---@param packages string[]
+---@param has_package function
 ---@param get_package function
-local function install_pkgs(packages, get_package)
+local function install_pkgs(packages, has_package, get_package)
   iter(packages)
+    :filter(function(pkg)
+      return has_package(pkg)
+    end)
     :map(get_package)
     :filter(function(pkg)
       return not pkg:is_installed()
@@ -58,14 +62,19 @@ local function extract_pkgname_lists(mason_mapping_table)
         return tbl_get(lint, "linters", lnt) ~= nil
       end)
       :map(function(lnt)
-        return lint.linters[lnt].cmd
+        local cmd = lint.linters[lnt].cmd
+        if type(cmd) == "function" then
+          return cmd()
+        end
+        return cmd
       end)
       :totable() or {},
     formatters = (ok_conform and type(conform.list_all_formatters) == "function")
         and iter(conform.list_all_formatters() or {})
           :map(function(fmt)
-            return fmt.command
+            return { fmt.name, fmt.command }
           end)
+          :flatten()
           :totable()
       or {},
   }
@@ -94,8 +103,9 @@ local function config()
 
   if v.vim_did_enter == 1 then -- Prevent errors on first neovim startup
     local registry = require("mason-registry")
+    local has_package = registry.has_package
     local get_package = registry.get_package
-    if type(get_package) == "function" then
+    if type(has_package) == "function" and type(get_package) == "function" then
       local ok_get_all_pkg_specs, all_pkg_specs = pcall(registry.get_all_package_specs)
       if not ok_get_all_pkg_specs then
         vim.notify("Failed to load package metadata from mason-registry.", log.levels.WARN, { title = "mason.nvim" })
@@ -103,7 +113,7 @@ local function config()
       local mason_mapping_table = ok_get_all_pkg_specs and create_mason_mapping_table(all_pkg_specs) or {}
 
       local pkgs = extract_pkgname_lists(mason_mapping_table)
-      pcall(registry.refresh, install_pkgs(merge_uniq_pkgnames(pkgs), get_package))
+      pcall(registry.refresh, install_pkgs(merge_uniq_pkgnames(pkgs), has_package, get_package))
     end
   end
 end
