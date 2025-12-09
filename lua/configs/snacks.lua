@@ -27,7 +27,7 @@ local options = {
         { icon = "󰙅 ", key = "e", desc = "Explorer", action = ":lua Snacks.dashboard.pick('explorer')" },
         { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
         { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
-        { icon = "󰟾 ", key = "M", desc = "Mason", action = ":Mason" },
+        { icon = "󰟾 ", key = "M", desc = "Mason", action = ":lua require('mason.ui').open()" },
         { icon = " ", key = "m", desc = "Keymaps", action = ":lua Snacks.dashboard.pick('keymaps')" },
         {
           icon = " ",
