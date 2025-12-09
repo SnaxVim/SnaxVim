@@ -6,6 +6,9 @@ local sev = diagnostic.severity
 -- editor options
 o.confirm = true
 o.expandtab = true
+o.foldlevel = 99
+o.foldmethod = "expr"
+o.foldtext = ""
 o.shiftwidth = 0
 o.tabstop = 2
 o.ignorecase = true
