@@ -35,12 +35,12 @@ return {
   },
   { -- DAP client
     "mfussenegger/nvim-dap",
+    dependencies = "igorlfs/nvim-dap-view",
     cmd = { "DapContinue", "DapToggleBreakpoint" },
     config = require("configs.nvim-dap").config,
   },
   { -- Visualize debugging sessions
     "igorlfs/nvim-dap-view",
-    dependencies = "mfussenegger/nvim-dap",
     cmd = "DapViewToggle",
     opts = require("configs.nvim-dap-view"),
   },
