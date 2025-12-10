@@ -2,6 +2,7 @@ local api = vim.api
 local iter = vim.iter
 local tbl_get = vim.tbl_get
 local tbl_keys = vim.tbl_keys
+local augroup = "mason-install-packages"
 
 --- Install packages that are not yet installed via mason.nvim
 ---@param packages string[]
@@ -93,7 +94,7 @@ end
 
 api.nvim_create_autocmd("FileType", {
   pattern = "mason",
-  group = api.nvim_create_augroup("mason-install-packages", { clear = true }),
+  group = api.nvim_create_augroup(augroup, { clear = true }),
   callback = function()
     local registry = require("mason-registry")
     local has_package = registry.has_package
@@ -108,5 +109,7 @@ api.nvim_create_autocmd("FileType", {
       local pkgs = extract_pkgname_lists(mason_mapping_table)
       pcall(registry.refresh, install_pkgs(merge_uniq_pkgnames(pkgs), has_package, get_package))
     end
+
+    api.nvim_clear_autocmds({ group = augroup })
   end,
 })
