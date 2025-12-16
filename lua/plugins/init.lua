@@ -8,7 +8,6 @@ return {
 
   { -- Parser
     "nvim-treesitter/nvim-treesitter",
-    branch = "main",
     build = ":TSUpdate",
     event = { "BufNewFile", "BufReadPost" },
     opts = {},
