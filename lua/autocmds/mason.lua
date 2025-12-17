@@ -93,8 +93,9 @@ local function create_mason_mapping_table(all_pkg_specs)
 end
 
 api.nvim_create_autocmd("FileType", {
-  pattern = "mason",
   group = api.nvim_create_augroup(augroup, { clear = true }),
+  once = true,
+  pattern = "mason",
   callback = function()
     local registry = require("mason-registry")
     local has_package = registry.has_package
@@ -109,7 +110,5 @@ api.nvim_create_autocmd("FileType", {
       local pkgs = extract_pkgname_lists(mason_mapping_table)
       pcall(registry.refresh, install_pkgs(merge_uniq_pkgnames(pkgs), has_package, get_package))
     end
-
-    api.nvim_clear_autocmds({ group = augroup })
   end,
 })
