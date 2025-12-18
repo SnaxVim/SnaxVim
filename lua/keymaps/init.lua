@@ -45,13 +45,8 @@ map("n", "<Plug>(TermEsc)<Esc>", "i<Esc>", { desc = "Terminal Send Esc" })
 map("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Highlight Clear" })
 map("n", "<leader>wt", function()
   local wo = vim.wo
-  if wo.wrap then
-    wo.wrap = false
-    vim.notify("wrap: off")
-  else
-    wo.wrap = true
-    vim.notify("wrap: on")
-  end
+  wo.wrap = not wo.wrap
+  vim.notify("wrap: " .. (wo.wrap and "on" or "off"))
 end, { desc = "Wrap Toggle" })
 
 -- LSP
