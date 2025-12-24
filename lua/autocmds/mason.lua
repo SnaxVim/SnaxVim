@@ -58,7 +58,7 @@ local function extract_pkgname_lists(mason_lspconfig_table, mason_bin_table)
     linters = ok_lint and iter(vim.tbl_values(lint.linters_by_ft))
       :flatten()
       :filter(function(lnt)
-        return tbl_get(lint, "linters", lnt) ~= nil
+        return tbl_get(lint, "linters") ~= nil and type(lint.linters[lnt]) == "table"
       end)
       :map(function(lnt)
         local cmd = lint.linters[lnt].cmd
@@ -83,10 +83,12 @@ end
 local function create_mason_lspconfig_table(all_pkg_specs)
   return iter(all_pkg_specs)
     :filter(function(pkg_spec)
-      return tbl_get(pkg_spec, "neovim") ~= nil and type(pkg_spec.neovim.lspconfig) == "string"
+      return tbl_get(pkg_spec, "neovim") ~= nil
+        and type(pkg_spec.neovim.lspconfig) == "string"
+        and type(pkg_spec.name) == "string"
     end)
     :fold({}, function(acc, pkg_spec)
-      acc[pkg_spec.neovim.lspconfig] = pkg_spec.name or pkg_spec.neovim.lspconfig
+      acc[pkg_spec.neovim.lspconfig] = pkg_spec.name
       return acc
     end)
 end
@@ -97,7 +99,7 @@ end
 local function create_mason_bin_table(all_pkg_specs)
   return iter(all_pkg_specs)
     :filter(function(pkg_spec)
-      return type(pkg_spec.bin) == "table"
+      return type(pkg_spec.bin) == "table" and type(pkg_spec.name) == "string"
     end)
     :fold({}, function(acc, pkg_spec)
       iter(tbl_keys(pkg_spec.bin)):each(function(bin)
