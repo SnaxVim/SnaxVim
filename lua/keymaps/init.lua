@@ -45,8 +45,8 @@ map("n", "<Plug>(TermEsc)<Esc>", "i<Esc>", { desc = "Terminal Send Esc" })
 map("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Highlight Clear" })
 map("n", "<leader>wt", function()
   local wo = vim.wo
+  vim.notify("wrap: " .. (wo.wrap and "off" or "on"))
   wo.wrap = not wo.wrap
-  vim.notify("wrap: " .. (wo.wrap and "on" or "off"))
 end, { desc = "Wrap Toggle" })
 
 -- LSP
@@ -70,13 +70,9 @@ end, { desc = "LSP Jump to Previous Diagnostic" })
 map("n", "<leader>qf", vim.diagnostic.setloclist, { desc = "LSP Open Diagnostic Quickfix list" })
 map("n", "<leader>ci", function()
   local inlay_hint = vim.lsp.inlay_hint
-  if inlay_hint.is_enabled() then
-    inlay_hint.enable(false)
-    vim.notify("inlay hint: off")
-  else
-    inlay_hint.enable(true)
-    vim.notify("inlay hint: on")
-  end
+  local is_enabled = inlay_hint.is_enabled()
+  vim.notify("inlay hint: " .. (is_enabled and "off" or "on"))
+  inlay_hint.enable(not is_enabled)
 end, { desc = "LSP Toggle Inlay Hint" })
 
 -- plugins
