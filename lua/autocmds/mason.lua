@@ -5,20 +5,22 @@ local tbl_keys = vim.tbl_keys
 
 --- Install packages that are not yet installed via mason.nvim
 ---@param packages string[]
----@param has_package function
----@param get_package function
-local function install_pkgs(packages, has_package, get_package)
-  iter(packages)
-    :filter(function(pkg)
-      return has_package(pkg)
-    end)
-    :map(get_package)
-    :filter(function(pkg)
-      return not pkg:is_installed()
-    end)
-    :each(function(pkg)
-      pkg:install()
-    end)
+---@param registry table
+local function install_pkgs(packages, registry)
+  local has_package = registry.has_package
+  local is_installed = registry.is_installed
+  local get_package = registry.get_package
+
+  if type(has_package) == "function" and type(is_installed) == "function" and type(get_package) == "function" then
+    iter(packages)
+      :filter(function(pkg)
+        return has_package(pkg) and not is_installed(pkg)
+      end)
+      :map(get_package)
+      :each(function(pkg)
+        pkg:install()
+      end)
+  end
 end
 
 ---@class PkgLists
@@ -114,18 +116,15 @@ api.nvim_create_autocmd("FileType", {
   pattern = "mason",
   callback = function()
     local registry = require("mason-registry")
-    local has_package = registry.has_package
-    local get_package = registry.get_package
-    if type(has_package) == "function" and type(get_package) == "function" then
-      local ok_get_all_pkg_specs, all_pkg_specs = pcall(registry.get_all_package_specs)
-      if not ok_get_all_pkg_specs then
-        vim.notify("Failed to load package metadata from mason-registry.", vim.log.levels.WARN)
-      end
-      local mason_lspconfig_table = ok_get_all_pkg_specs and create_mason_lspconfig_table(all_pkg_specs) or {}
-      local mason_bin_table = ok_get_all_pkg_specs and create_mason_bin_table(all_pkg_specs) or {}
+    local ok_get_all_pkg_specs, all_pkg_specs = pcall(registry.get_all_package_specs)
 
+    if ok_get_all_pkg_specs then
+      local mason_lspconfig_table = create_mason_lspconfig_table(all_pkg_specs)
+      local mason_bin_table = create_mason_bin_table(all_pkg_specs)
       local pkgs = extract_pkgname_lists(mason_lspconfig_table, mason_bin_table)
-      pcall(registry.refresh, install_pkgs(merge_uniq_pkgnames(pkgs), has_package, get_package))
+      pcall(registry.refresh, install_pkgs(merge_uniq_pkgnames(pkgs), registry))
+    else
+      vim.notify("Failed to load package metadata from mason-registry.", vim.log.levels.WARN)
     end
   end,
 })
