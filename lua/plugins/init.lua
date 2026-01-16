@@ -23,6 +23,7 @@ return {
   { -- Portable package manager for LSP, DAP, linters, and formatters
     "mason-org/mason.nvim",
     build = ":MasonUpdate",
+    cmd = "Mason",
     event = { "BufNewFile", "BufReadPost" },
     opts = require("configs.mason"),
   },
