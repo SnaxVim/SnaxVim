@@ -116,15 +116,18 @@ api.nvim_create_autocmd("FileType", {
   pattern = "mason",
   callback = function()
     local registry = require("mason-registry")
-    local ok_get_all_pkg_specs, all_pkg_specs = pcall(registry.get_all_package_specs)
 
-    if ok_get_all_pkg_specs then
-      local mason_lspconfig_table = create_mason_lspconfig_table(all_pkg_specs)
-      local mason_bin_table = create_mason_bin_table(all_pkg_specs)
-      local pkgs = extract_pkgname_lists(mason_lspconfig_table, mason_bin_table)
-      pcall(registry.refresh, install_pkgs(merge_uniq_pkgnames(pkgs), registry))
-    else
-      vim.notify("Failed to load package metadata from mason-registry.", vim.log.levels.WARN)
-    end
+    pcall(registry.refresh, function()
+      local ok, all_pkg_specs = pcall(registry.get_all_package_specs)
+
+      if ok then
+        local mason_lspconfig_table = create_mason_lspconfig_table(all_pkg_specs)
+        local mason_bin_table = create_mason_bin_table(all_pkg_specs)
+        local pkgs = merge_uniq_pkgnames(extract_pkgname_lists(mason_lspconfig_table, mason_bin_table))
+        install_pkgs(pkgs, registry)
+      else
+        vim.notify("Failed to load package metadata from mason-registry.", vim.log.levels.WARN)
+      end
+    end)
   end,
 })
