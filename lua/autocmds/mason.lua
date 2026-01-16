@@ -14,7 +14,7 @@ local function install_pkgs(packages, registry)
   if type(has_package) == "function" and type(is_installed) == "function" and type(get_package) == "function" then
     iter(packages)
       :filter(function(pkg)
-        return has_package(pkg) and not is_installed(pkg)
+        return has_package(pkg) and not is_installed(pkg) and vim.fn.executable(pkg) == 0
       end)
       :map(get_package)
       :each(function(pkg)
