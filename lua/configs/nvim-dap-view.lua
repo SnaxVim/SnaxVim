@@ -5,7 +5,7 @@ local options = {
       position = "left",
     },
   },
-  auto_toggle = "keep_terminal",
+  auto_toggle = true,
 }
 
 return options
