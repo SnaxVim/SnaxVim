@@ -5,6 +5,11 @@ local options = {
       position = "left",
     },
   },
+  windows = {
+    terminal = {
+      size = 0.3,
+    },
+  },
   auto_toggle = true,
 }
 
