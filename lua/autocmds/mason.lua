@@ -3,24 +3,36 @@ local iter = vim.iter
 local tbl_get = vim.tbl_get
 local tbl_keys = vim.tbl_keys
 
---- Install packages that are not yet installed via mason.nvim
----@param packages string[]
----@param registry table
-local function install_pkgs(packages, registry)
-  local has_package = registry.has_package
-  local is_installed = registry.is_installed
-  local get_package = registry.get_package
+--- Create a mapping table from each binary name to its mason-registry package name
+---@param all_pkg_specs RegistryPackageSpec[]
+---@return table<string, string>
+local function create_mason_bin_table(all_pkg_specs)
+  return iter(all_pkg_specs)
+    :filter(function(pkg_spec)
+      return type(pkg_spec.bin) == "table" and type(pkg_spec.name) == "string"
+    end)
+    :fold({}, function(acc, pkg_spec)
+      iter(tbl_keys(pkg_spec.bin)):each(function(bin)
+        acc[bin] = pkg_spec.name
+      end)
+      return acc
+    end)
+end
 
-  if type(has_package) == "function" and type(is_installed) == "function" and type(get_package) == "function" then
-    iter(packages)
-      :filter(function(pkg)
-        return has_package(pkg) and not is_installed(pkg) and vim.fn.executable(pkg) == 0
-      end)
-      :map(get_package)
-      :each(function(pkg)
-        pkg:install()
-      end)
-  end
+--- Create a mapping table from each nvim-lspconfig name to its mason-registry package name
+---@param all_pkg_specs RegistryPackageSpec[]
+---@return table<string, string>
+local function create_mason_lspconfig_table(all_pkg_specs)
+  return iter(all_pkg_specs)
+    :filter(function(pkg_spec)
+      return tbl_get(pkg_spec, "neovim") ~= nil
+        and type(pkg_spec.neovim.lspconfig) == "string"
+        and type(pkg_spec.name) == "string"
+    end)
+    :fold({}, function(acc, pkg_spec)
+      acc[pkg_spec.neovim.lspconfig] = pkg_spec.name
+      return acc
+    end)
 end
 
 ---@class PkgLists
@@ -28,16 +40,6 @@ end
 ---@field daps string[]
 ---@field linters string[]
 ---@field formatters string[]
-
---- Merge package name lists and remove duplicates
----@param pkgs PkgLists
----@return string[]
-local function merge_uniq_pkgnames(pkgs)
-  return tbl_keys(iter({ pkgs.lsps, pkgs.daps, pkgs.linters, pkgs.formatters }):flatten():fold({}, function(acc, pkg)
-    acc[pkg] = true
-    return acc
-  end))
-end
 
 --- Extract installable package names from current plugin configurations
 ---@param mason_lspconfig_table table<string, string>
@@ -78,36 +80,27 @@ local function extract_pkgname_lists(mason_lspconfig_table, mason_bin_table)
   }
 end
 
---- Create a mapping table from each nvim-lspconfig name to its mason-registry package name
----@param all_pkg_specs RegistryPackageSpec[]
----@return table<string, string>
-local function create_mason_lspconfig_table(all_pkg_specs)
-  return iter(all_pkg_specs)
-    :filter(function(pkg_spec)
-      return tbl_get(pkg_spec, "neovim") ~= nil
-        and type(pkg_spec.neovim.lspconfig) == "string"
-        and type(pkg_spec.name) == "string"
-    end)
-    :fold({}, function(acc, pkg_spec)
-      acc[pkg_spec.neovim.lspconfig] = pkg_spec.name
-      return acc
-    end)
-end
+--- Resolve declared package names into a flattened, deduplicated list of packages not yet available in the system
+---@param pkgs PkgLists
+---@param registry table
+---@return string[]
+local function resolve_missing_pkgnames(pkgs, registry)
+  local has_package = registry.has_package
+  local is_installed = registry.is_installed
 
---- Create a mapping table from each binary name to its mason-registry package name
----@param all_pkg_specs RegistryPackageSpec[]
----@return table<string, string>
-local function create_mason_bin_table(all_pkg_specs)
-  return iter(all_pkg_specs)
-    :filter(function(pkg_spec)
-      return type(pkg_spec.bin) == "table" and type(pkg_spec.name) == "string"
-    end)
-    :fold({}, function(acc, pkg_spec)
-      iter(tbl_keys(pkg_spec.bin)):each(function(bin)
-        acc[bin] = pkg_spec.name
+  if type(has_package) == "function" and type(is_installed) == "function" then
+    return tbl_keys(iter({ pkgs.lsps, pkgs.daps, pkgs.linters, pkgs.formatters })
+      :flatten()
+      :filter(function(pkg)
+        return has_package(pkg) and not is_installed(pkg) and vim.fn.executable(pkg) == 0
       end)
-      return acc
-    end)
+      :fold({}, function(acc, pkg)
+        acc[pkg] = true
+        return acc
+      end))
+  end
+
+  return {}
 end
 
 api.nvim_create_autocmd("FileType", {
@@ -123,8 +116,14 @@ api.nvim_create_autocmd("FileType", {
       if ok then
         local mason_lspconfig_table = create_mason_lspconfig_table(all_pkg_specs)
         local mason_bin_table = create_mason_bin_table(all_pkg_specs)
-        local pkgs = merge_uniq_pkgnames(extract_pkgname_lists(mason_lspconfig_table, mason_bin_table))
-        install_pkgs(pkgs, registry)
+        local pkgs = resolve_missing_pkgnames(extract_pkgname_lists(mason_lspconfig_table, mason_bin_table), registry)
+
+        local get_package = registry.get_package
+        if next(pkgs) and type(get_package) == "function" then
+          iter(pkgs):map(get_package):each(function(pkg)
+            pkg:install()
+          end)
+        end
       else
         vim.notify("Failed to load package metadata from mason-registry.", vim.log.levels.WARN)
       end
