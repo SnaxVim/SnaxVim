@@ -118,10 +118,19 @@ api.nvim_create_autocmd("FileType", {
         local mason_bin_table = create_mason_bin_table(all_pkg_specs)
         local pkgs = resolve_missing_pkgnames(extract_pkgname_lists(mason_lspconfig_table, mason_bin_table), registry)
 
-        local get_package = registry.get_package
-        if next(pkgs) and type(get_package) == "function" then
-          iter(pkgs):map(get_package):each(function(pkg)
-            pkg:install()
+        if next(pkgs) then
+          vim.ui.select({ true, false }, {
+            prompt = "Some configured tools are not installed. Install them now?",
+            format_item = function(item)
+              return item and "Yes" or "No"
+            end,
+          }, function(choice)
+            local get_package = registry.get_package
+            if choice and type(get_package) == "function" then
+              iter(pkgs):map(get_package):each(function(pkg)
+                pkg:install()
+              end)
+            end
           end)
         end
       else
