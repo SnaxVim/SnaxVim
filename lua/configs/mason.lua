@@ -1,7 +1,11 @@
-require("autocmds.mason")
+local function config()
+  require("autocmds.mason")
 
-local options = {
-  ui = { icons = { package_pending = "󰦗", package_installed = "󰄳", package_uninstalled = "󰄰" } },
-}
+  local options = {
+    ui = { icons = { package_pending = "󰦗", package_installed = "󰄳", package_uninstalled = "󰄰" } },
+  }
 
-return options
+  return options
+end
+
+return config
