@@ -1,7 +1,14 @@
--- This sample shows how to add plugins in the expected format; any file in this directory can do the same
--- Consider moving `opts` and `config` into `lua/configs` and requiring them here for better organization
+-- Example plugin definitions
+-- Uncomment an example or add a new plugin below
+-- You can split plugin definitions into multiple files in this directory
 
 return {
+  { -- Dashboard
+    "nvimdev/dashboard-nvim",
+    event = "VimEnter",
+    opts = require("configs.dashboard-nvim"),
+  },
+
   -- { -- Colorscheme
   --   "catppuccin/nvim",
   --   lazy = false,
@@ -9,6 +16,11 @@ return {
   --     require("catppuccin").setup({ no_italic = true })
   --     vim.cmd.colorscheme("catppuccin-latte")
   --   end,
+  -- },
+
+  -- { -- Fuzzy finder
+  --   "nvim-telescope/telescope.nvim",
+  --   cmd = "Telescope",
   -- },
 
   -- { -- Git integration for buffers
