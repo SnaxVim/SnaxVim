@@ -113,6 +113,17 @@ local function resolve_missing_pkgnames(pkglists, registry)
   return {}
 end
 
+--- Return a single-line prompt listing missing tools
+---@param packages string[]
+---@return string
+local function missing_tools_prompt(packages)
+  local display_limit = 5
+  local body = table.concat(iter(packages):take(display_limit):totable(), ", ")
+  local suffix = #packages > display_limit and string.format(", … (+%d more)", #packages - display_limit) or ""
+
+  return "Missing tools: " .. body .. suffix
+end
+
 api.nvim_create_autocmd("FileType", {
   group = api.nvim_create_augroup("mason-install-packages", { clear = true }),
   once = true,
@@ -137,9 +148,9 @@ api.nvim_create_autocmd("FileType", {
 
         if not vim.tbl_isempty(pkgs) then
           vim.ui.select({ true, false }, {
-            prompt = "Some configured tools are not installed. Install them now?",
+            prompt = missing_tools_prompt(pkgs),
             format_item = function(item)
-              return item and "Yes" or "No"
+              return item and "Install" or "Skip"
             end,
           }, function(choice)
             local get_package = registry.get_package
