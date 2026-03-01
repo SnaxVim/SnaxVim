@@ -30,8 +30,6 @@ SnaxVim is a no-frills starter template for building your own Neovim configurati
 - [**tree-sitter-cli**](https://tree-sitter.github.io/tree-sitter/creating-parsers/1-getting-started.html#installation) for [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 - a C compiler for [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 - (optional) a [Nerd Font](https://www.nerdfonts.com/)
-- (optional) **[ripgrep](https://github.com/BurntSushi/ripgrep)** for [`Snacks.picker.grep`](https://github.com/folke/snacks.nvim/blob/main/docs/picker.md#grep)
-- (optional) **[fd](https://github.com/sharkdp/fd)** for [`Snacks.picker.explorer`](https://github.com/folke/snacks.nvim/blob/main/docs/picker.md#explorer)
 
 ## Install
 
