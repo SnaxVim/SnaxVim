@@ -39,9 +39,12 @@ map({ "n", "x", "i" }, "<C-s>", function()
   end
 end, { desc = "Buffer Save" })
 
--- option
+-- terminal
 map("t", "<Esc>", "<C-\\><C-n><Plug>(TermEsc)", { desc = "Terminal Switch to Normal Mode" })
 map("n", "<Plug>(TermEsc)<Esc>", "i<Esc>", { desc = "Terminal Send Esc" })
+map("n", "<A-i>", "<cmd>terminal<CR>", { desc = "Terminal Open" })
+
+-- option
 map("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Highlight Clear" })
 map("n", "<leader>wt", function()
   local wo = vim.wo
@@ -79,4 +82,3 @@ end, { desc = "LSP Toggle Inlay Hint" })
 require("keymaps.conform")
 require("keymaps.nvim-dap")
 require("keymaps.nvim-dap-view")
-require("keymaps.snacks")
