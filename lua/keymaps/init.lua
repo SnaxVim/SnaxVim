@@ -29,7 +29,7 @@ map("n", "<A-Left>", "<C-w><", { desc = "Window Decrease Width" })
 
 -- buffer operation
 map("n", "<C-n>", "<cmd>enew<CR>", { desc = "Buffer New" })
-map({ "n", "x", "i" }, "<C-s>", function()
+map({ "n", "x" }, "<C-s>", function()
   local api = vim.api
   if api.nvim_buf_get_name(0) == "" then
     local keys = api.nvim_replace_termcodes("<Esc>:w ", true, false, true)
