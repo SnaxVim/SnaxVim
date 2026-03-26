@@ -5,10 +5,9 @@ local opt = vim.opt
 g.mapleader = " "
 
 o.cursorline = true
-opt.fillchars = { eob = " ", foldclose = "", foldopen = "", foldsep = " " }
+opt.fillchars = { eob = " ", foldclose = "", foldopen = "", foldsep = " ", foldinner = " " }
 o.foldcolumn = "1"
 o.signcolumn = "yes"
-o.statuscolumn = "%s%l%#FoldColumn#%{v:lua.require('foldcolumn')()} %*"
 o.laststatus = 3
 o.list = true
 o.number = true

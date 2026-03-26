@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![neovim](https://img.shields.io/badge/neovim-0.11-red.svg?style=flat-square&color=99e6ff&logo=Neovim&logoColor=white)](https://neovim.io/)
+[![neovim](https://img.shields.io/badge/neovim-0.12-red.svg?style=flat-square&color=99e6ff&logo=Neovim&logoColor=white)](https://neovim.io/)
 [![plugins](https://img.shields.io/badge/plugins-10-red.svg?style=flat-square&color=99ff99)](https://github.com/SnaxVim/SnaxVim/blob/main/lua/plugins/init.lua)
 [![last commit](https://img.shields.io/github/last-commit/SnaxVim/SnaxVim?style=flat-square&color=ffe699)](https://github.com/SnaxVim/SnaxVim/pulse)
 [![issues](https://img.shields.io/github/issues/SnaxVim/SnaxVim?style=flat-square&color=ff9999)](https://github.com/SnaxVim/SnaxVim/issues)
@@ -25,7 +25,7 @@ SnaxVim is a no-frills starter template for building your own Neovim configurati
 
 ## Requirements
 
-- **neovim** >= 0.11.0
+- **neovim** >= 0.12.0
 - **git**
 - [**tree-sitter-cli**](https://tree-sitter.github.io/tree-sitter/creating-parsers/1-getting-started.html#installation) for [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 - a C compiler for [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
@@ -86,7 +86,6 @@ nvim
 │  ├─ configs/        -- plugin-specific configuration files
 │  ├─ keymaps/        -- key mappings
 │  ├─ plugins/        -- plugin declarations
-│  ├─ foldcolumn.lua  -- foldcolumn without digits
 │  ├─ options.lua     -- global variables and editor options
 │  └─ options_pre.lua -- settings evaluated before lazy.nvim
 └─ init.lua           -- entry point
