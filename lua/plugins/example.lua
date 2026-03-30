@@ -5,7 +5,7 @@
 return {
   { -- Dashboard
     "nvimdev/dashboard-nvim",
-    event = "VimEnter",
+    event = "UIEnter",
     opts = require("configs.dashboard-nvim"),
   },
 
