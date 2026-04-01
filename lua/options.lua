@@ -11,6 +11,7 @@ o.tabstop = 2
 o.ignorecase = true
 o.smartcase = true
 opt.listchars = { tab = " ‥", trail = "-", nbsp = "␣", eol = "↲", space = "·", extends = "»", precedes = "«" }
+o.modeline = false
 o.mouse = "a"
 o.scrolloff = 5
 o.smartindent = true
