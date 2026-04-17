@@ -1,16 +1,20 @@
-local options = {
-  winbar = {
-    controls = {
-      enabled = true,
-      position = "left",
+local function config()
+  local options = {
+    winbar = {
+      controls = {
+        enabled = true,
+        position = "left",
+      },
     },
-  },
-  windows = {
-    terminal = {
-      size = 0.3,
+    windows = {
+      terminal = {
+        size = 0.3,
+      },
     },
-  },
-  auto_toggle = true,
-}
+    auto_toggle = true,
+  }
 
-return options
+  return options
+end
+
+return config
