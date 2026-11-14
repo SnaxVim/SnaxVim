@@ -33,7 +33,7 @@ local function config()
 
   lsp.inlay_hint.enable(true)
 
-  if next(servers) then
+  if not vim.tbl_isempty(servers) then
     lsp.enable(servers)
   end
 end
